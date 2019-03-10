@@ -2,12 +2,12 @@ package kz.validol.hacknu
 
 import io.reactivex.Observable
 import kz.validol.hacknu.auth.LoginResponse
-import retrofit2.http.GET
-import retrofit2.http.Query
+import kz.validol.hacknu.entities.User
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 interface Api {
 
-    @GET("login/")
-    fun authorize(@Query("email") email:String,
-                  @Query("password") password:String): Observable<LoginResponse>
+    @POST("register/")
+    fun register(@Body user: User): Observable<LoginResponse>
 }
