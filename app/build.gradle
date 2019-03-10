@@ -64,6 +64,7 @@ dependencies {
     //show & hide password library
     implementation 'com.github.scottyab:showhidepasswordedittext:0.8'
     implementation 'com.github.pinball83:masked-edittext:1.0.4'
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
 
 apply plugin: 'com.google.gms.google-services'

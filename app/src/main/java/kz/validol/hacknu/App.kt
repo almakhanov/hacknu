@@ -18,6 +18,7 @@ class App : Application() {
 
         var loadingDialog: Dialog?= null
         var fcmDeviceId = ""
+        var facebookToken = ""
 
         fun hideProgress(){
             loadingDialog?.dismiss()

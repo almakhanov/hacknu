@@ -1,4 +1,4 @@
-package kz.validol.hacknu.auth
+package kz.validol.hacknu.entities
 
 import com.google.gson.annotations.SerializedName
 import kz.validol.hacknu.entities.User
