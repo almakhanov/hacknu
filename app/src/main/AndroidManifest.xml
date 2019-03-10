@@ -10,8 +10,11 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
+            tools:replace="android:appComponentFactory"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".onboarding.OnboardingActivity">
+        </activity>
 
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
@@ -30,12 +33,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".MainActivity"/>
         <activity
                 android:name=".auth.LoginActivity"
                 android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
 
         <service android:name=".MyFirebaseMessagingService">

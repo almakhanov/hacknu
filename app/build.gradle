@@ -60,6 +60,8 @@ dependencies {
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
 
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.airbnb.android:lottie:2.8.0'
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:2.1.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
