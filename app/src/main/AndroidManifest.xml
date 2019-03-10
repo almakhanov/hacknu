@@ -22,6 +22,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".auth.RegisterActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/ic_notifications_black_24dp"/>
@@ -32,13 +36,16 @@
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="@string/default_notification_channel_id"/>
 
-        <activity android:name=".SplashActivity">
 
-        </activity>
+        <activity
+                android:name=".SplashActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+
         <activity android:name=".MainActivity"/>
         <activity
                 android:name=".auth.LoginActivity"
                 android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
 
         <service android:name=".MyFirebaseMessagingService">
