@@ -26,7 +26,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token:String?){
-
+        Log.e("accepted ~ ", token)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
