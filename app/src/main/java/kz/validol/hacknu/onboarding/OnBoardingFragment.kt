@@ -29,10 +29,10 @@ class OnBoardingFragment: Fragment(){
     private fun bindView(){
         when(position){
             0 -> {
-                lottie?.setAnimation(R.raw.animation_first)
+                lottie?.setAnimation(R.raw.animation_second)
             }
             1 -> {
-                lottie?.setAnimation(R.raw.animation_second)
+                lottie?.setAnimation(R.raw.cycle_animation)
             }
             else -> {
                 lottie?.setAnimation(R.raw.okay)
