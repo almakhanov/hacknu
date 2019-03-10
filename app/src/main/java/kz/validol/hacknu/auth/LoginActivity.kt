@@ -3,10 +3,7 @@ package kz.validol.hacknu.auth
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.Toast
-import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.messaging.FirebaseMessaging
 import kz.validol.hacknu.Constants
 import kz.validol.hacknu.R
 import kz.validol.hacknu.local_storage.Customer
@@ -39,19 +36,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
         if (sharedPref.getInt(Constants.DOWNLOADED, 0) == 0) {
             sharedPref.edit().putInt(Constants.DOWNLOADED, 1).apply()
 
-        }
-
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Log.d("token accepted", it.result?.token)
-                }
-            }
-
-        FirebaseMessaging.getInstance().subscribeToTopic("task").addOnCompleteListener {
-            if (it.isSuccessful) {
-                Log.d("subscription", "SUCCESS")
-            }
         }
     }
 }
