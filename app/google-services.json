@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "747001679168",
+    "firebase_url": "https://hacknu-fd350.firebaseio.com",
+    "project_id": "hacknu-fd350",
+    "storage_bucket": "hacknu-fd350.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747001679168:android:78d98b54e353acfc",
+        "android_client_info": {
+          "package_name": "kz.validol.hacknu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "747001679168-jmakd850bp83okgrelpp6kfsvmg6i3vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYiTWEwgiFQJODn33euyvGapkjsljSh8o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

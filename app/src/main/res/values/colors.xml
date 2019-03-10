@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <!--<color name="colorPrimary">#d30425</color>-->
+    <color name="colorPrimary">#D8122D</color>
+    <!--<color name="colorPrimaryDark">#990000</color>-->
+    <color name="colorPrimaryDark">#850012</color>
+    <!--<color name="primaryLightColor">#ff534e</color>-->
+    <color name="primaryLightColor">#D8122D</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimaryLight">#eaeaea</color>
+    <color name="colorTransparent">#00000000</color>
+
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorIcons">#d30425</color>
+    <color name="colorDivider">#d30425</color>
+
+    <color name="colorBoldTextDefault">#505050</color>
+    <color name="colorTextDefault">#727272</color>
+    <color name="colorTextLight">#999999</color>
+
+    <color name="colorTabOutline">#f78b80</color>
+    <color name="colorLoginPurple">#f41642</color>
+    <color name="colorLoginPurpleDark">#e41642</color>
+    <color name="colorLogoGray">#a8a8a8</color>
+    <color name="colorWhite">#fff</color>
+    <color name="colorLightGray">#dfdfdf</color>
+
+    <color name="colorWhiteRed">#f78fa7</color>
+
+    <color name="colorBlue">#ec9500</color>
+    <color name="colorType">#efefef</color>
 </resources>
