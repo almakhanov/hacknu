@@ -60,6 +60,10 @@ dependencies {
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
 
     implementation 'com.android.support:multidex:1.0.3'
+
+    //show & hide password library
+    implementation 'com.github.scottyab:showhidepasswordedittext:0.8'
+    implementation 'com.github.pinball83:masked-edittext:1.0.4'
 }
 
 apply plugin: 'com.google.gms.google-services'
