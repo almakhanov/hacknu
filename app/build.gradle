@@ -17,6 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -70,6 +71,7 @@ dependencies {
     //show & hide password library
     implementation 'com.github.scottyab:showhidepasswordedittext:0.8'
     implementation 'com.github.pinball83:masked-edittext:1.0.4'
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
 
 
