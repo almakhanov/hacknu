@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".onboarding.OnboardingActivity">
+
+    <TextView
+            android:id="@+id/welcome"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:text="Welcome"
+            android:textColor="#000"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:textSize="30sp"
+            android:layout_height="wrap_content"/>
+
+    <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            app:layout_constraintTop_toBottomOf="@id/welcome"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            app:layout_constraintBottom_toTopOf="@id/dotsIndicator"
+            android:layout_marginBottom="32dp"
+            android:layout_height="0dp">
+    </android.support.v4.view.ViewPager>
+
+    <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+            android:id="@+id/dotsIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:dotsColor="#403BF2"
+            app:dotsStrokeColor="#403BF2"
+            app:layout_constraintBottom_toTopOf="@id/start"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="16dp"
+            app:dotsSpacing="4dp"
+            app:dotsStrokeWidth="2dp"
+    />
+
+    <Button
+            android:id="@+id/start"
+            android:layout_width="match_parent"
+            android:background="@drawable/btn_bg_filled"
+            android:text="Start now"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_height="56dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+</android.support.constraint.ConstraintLayout>
