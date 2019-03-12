@@ -13,11 +13,11 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginTop="36dp"
             android:layout_marginStart="36dp"
             android:textSize="36sp"
             android:textStyle="bold"
             android:text="Sign In"
+            app:layout_constraintBottom_toTopOf="@id/cardSignUp"
             android:id="@+id/signUpLabel"
             android:textColor="#333b46"/>
 
@@ -35,12 +35,13 @@
     <android.support.v7.widget.CardView
             android:id="@+id/cardSignUp"
             android:layout_width="match_parent"
+            android:layout_marginTop="64dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             app:layout_constraintTop_toBottomOf="@id/signUpLabel"
-            android:layout_marginTop="120dp"
             android:background="#fff"
             app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toTopOf="@id/btnSignUp"
             app:cardElevation="4dp"
             android:layout_height="wrap_content">
 
@@ -58,7 +59,7 @@
                     android:textColorHighlight="#c0c5ce"
                     android:drawableEnd="@drawable/ic_smartphone_black_24dp"
                     android:inputType="number"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Your Phone Number"/>
@@ -69,10 +70,10 @@
                     app:tint_color="#505050"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="20dp"
                     android:textColorHint="#c0c5ce"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="20dp"
                     android:textColorHighlight="#c0c5ce"
                     android:id="@+id/edit_text_sign_in_password"
                     app:drawable_show="@drawable/ic_eye"
@@ -95,8 +96,8 @@
             android:textSize="18sp"
             android:id="@+id/btnSignUp"
             android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@id/signInBox"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_height="56dp"
@@ -107,8 +108,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnSignUp"
-            android:layout_margin="16dp"
             android:layout_width="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/line"
             android:layout_height="wrap_content">
 
         <TextView
@@ -167,6 +168,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
             app:layout_constraintTop_toBottomOf="@id/signInTextOr"
