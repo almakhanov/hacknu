@@ -11,5 +11,6 @@ class OnboardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
         viewPager.adapter = ViewPagerAdapter(supportFragmentManager!!)
+        dotsIndicator.setViewPager(viewPager)
     }
 }

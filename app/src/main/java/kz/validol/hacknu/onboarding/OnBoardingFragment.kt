@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.airbnb.lottie.LottieAnimationView
+import kotlinx.android.synthetic.main.fragment_onboarding.*
 import kz.validol.hacknu.R
 import retrofit2.http.POST
 
@@ -30,12 +31,19 @@ class OnBoardingFragment: Fragment(){
         when(position){
             0 -> {
                 lottie?.setAnimation(R.raw.animation_second)
+                title.text = "Search book"
+                desc.text = "Search and recognize which books are accepted in the library for you."
+
             }
             1 -> {
-                lottie?.setAnimation(R.raw.cycle_animation)
+                lottie?.setAnimation(R.raw.scann)
+                title.text = "Hire book"
+                desc.text = "Scan barcode of the book and hire it fast and easily."
             }
             else -> {
-                lottie?.setAnimation(R.raw.okay)
+                lottie?.setAnimation(R.raw.cycle_animation)
+                title.text = "Finally!"
+                desc.text = "You can take and read book at home."
             }
         }
     }
