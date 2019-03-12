@@ -198,9 +198,16 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="36dp"
+                android:id="@+id/facebookLogin"
                 android:src="@drawable/facebook"
                 android:layout_margin="16dp"
                 android:layout_height="36dp"/>
+
+        <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content" />
 
         <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="36dp"
@@ -211,6 +218,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="36dp"
                 android:src="@drawable/twitter"
+                android:id="@+id/twitter"
                 android:layout_margin="16dp"
                 android:layout_height="36dp"/>
 

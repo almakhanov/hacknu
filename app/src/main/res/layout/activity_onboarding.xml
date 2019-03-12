@@ -15,8 +15,8 @@
             android:textStyle="bold"
             android:text="Welcome"
             android:textColor="#000"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="48dp"
             android:textSize="30sp"
             android:layout_height="wrap_content"/>
 
@@ -25,6 +25,7 @@
             app:layout_constraintTop_toBottomOf="@id/welcome"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
+            android:padding="48dp"
             app:layout_constraintBottom_toTopOf="@id/dotsIndicator"
             android:layout_marginBottom="32dp"
             android:layout_height="0dp">
@@ -41,7 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:dotsCornerRadius="8dp"
-            app:dotsSize="16dp"
+            app:dotsSize="12dp"
             app:dotsSpacing="4dp"
             app:dotsStrokeWidth="2dp"
     />

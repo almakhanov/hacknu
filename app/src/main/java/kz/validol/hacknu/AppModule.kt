@@ -19,7 +19,7 @@ val appModules: List<Module>
 val singletons = module {
     single { createService<Api>(get()) }
     single { createSharedPrefs(androidContext()) }
-    single { createLocalStorage(androidContext()) }
+//    single { createLocalStorage(androidContext()) }
 }
 
 internal fun createSharedPrefs(context: Context) : SharedPreferences {
@@ -28,5 +28,5 @@ internal fun createSharedPrefs(context: Context) : SharedPreferences {
 
 
 fun createLocalStorage(context:Context) : AppLocalDatabase {
-    return Room.databaseBuilder(context, AppLocalDatabase::class.java,"hacknu").build()
+    return Room.databaseBuilder(context, AppLocalDatabase::class.java,"hacknu1").build()
 }
