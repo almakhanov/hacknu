@@ -11,11 +11,20 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.GraphRequest
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
 import org.koin.android.ext.android.inject
 import java.util.*
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import android.R.attr.data
+import com.google.android.gms.common.api.ApiException
+//import android.support.test.orchestrator.junit.BundleJUnitUtils.getResult
+import android.support.v4.app.FragmentActivity
+import com.google.android.gms.tasks.Task
 
 
 class LoginActivity : AppCompatActivity() {
@@ -23,18 +32,39 @@ class LoginActivity : AppCompatActivity() {
     private val api: Api by inject()
     private val sharedPref: SharedPreferences by inject()
     private val faceBookCallbackManager = CallbackManager.Factory.create()
-
+    private var mGoogleSignInClient:GoogleSignInClient? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(kz.validol.hacknu.R.layout.activity_login)
         edit_text_sign_in_password.setTintColor(Color.parseColor("#c0c5ce"))
-
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
         loginViaFacebook()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
 //        api.register(User(-1,"ezhan9800@gmail.com", "Yerzhan", "1234", 21, "Helllo2", App.fcmDeviceId))
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())
 //            .subscribe()
+
+        googleSignIn.setOnClickListener {
+            signInGoogle()
+        }
+        sign_in_button.setOnClickListener {
+
+        }
+    }
+
+    private fun signInGoogle() {
+        val signInIntent = mGoogleSignInClient?.getSignInIntent()
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onStart() {
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+
+        super.onStart()
     }
 
     private fun loginViaFacebook() {
@@ -112,7 +142,32 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         faceBookCallbackManager.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            account?.let {
+                Log.d("result_google",account.displayName)
+            }
+            // Signed in successfully, show authenticated UI.
+//            updateUI(account)
+        } catch (e: ApiException) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+//            Log.w(FragmentActivity.TAG, "signInResult:failed code=" + e.statusCode)
+//            updateUI(null)
+        }
+
+    }
+
 }
+
+const val RC_SIGN_IN = 1001

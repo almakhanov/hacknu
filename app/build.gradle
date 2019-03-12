@@ -68,6 +68,7 @@ dependencies {
 
     implementation 'com.airbnb.android:lottie:2.7.0'
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:3.0.3'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
