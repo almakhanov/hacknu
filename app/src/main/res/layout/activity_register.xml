@@ -13,11 +13,11 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginTop="36dp"
             android:layout_marginStart="36dp"
             android:textSize="36sp"
             android:textStyle="bold"
             android:text="Sign Up"
+            app:layout_constraintBottom_toTopOf="@id/cardSignUp"
             android:id="@+id/signUpLabel"
             android:textColor="#333b46"/>
 
@@ -27,9 +27,9 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             app:layout_constraintTop_toBottomOf="@id/signUpLabel"
-            android:layout_marginTop="32dp"
             android:background="#fff"
             app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toTopOf="@id/btnSignUp"
             app:cardElevation="4dp"
             android:layout_height="wrap_content">
 
@@ -113,8 +113,8 @@
             android:textSize="18sp"
             android:id="@+id/btnSignUp"
             android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@id/signInBox"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_height="56dp"
@@ -125,8 +125,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnSignUp"
-            android:layout_margin="16dp"
             android:layout_width="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/line"
             android:layout_height="wrap_content">
 
         <TextView
@@ -164,7 +164,8 @@
             app:layout_constraintBottom_toTopOf="@id/signInTextOr"
             app:layout_constraintTop_toBottomOf="@id/signInBox"
             android:background="#c0c5ce"
-            android:layout_margin="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"/>
 
     <TextView
             android:id="@+id/signInTextOr"
@@ -174,7 +175,7 @@
             android:layout_width="wrap_content"
             app:layout_constraintBottom_toTopOf="@id/socBox"
             android:text="Or Sign Up Via Social Networks"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:textColor="#c0c5ce"
             android:textSize="16sp"
             android:layout_height="wrap_content"/>
@@ -186,8 +187,6 @@
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="32dp"
             app:layout_constraintTop_toBottomOf="@id/signInTextOr"
             android:layout_height="wrap_content">
 
