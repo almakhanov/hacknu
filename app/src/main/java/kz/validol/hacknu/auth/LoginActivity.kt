@@ -21,10 +21,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import android.R.attr.data
+import android.content.Context
 import com.google.android.gms.common.api.ApiException
 //import android.support.test.orchestrator.junit.BundleJUnitUtils.getResult
 import android.support.v4.app.FragmentActivity
+import android.widget.Toast
 import com.google.android.gms.tasks.Task
+import com.google.firebase.FirebaseApp
+import com.google.zxing.integration.android.IntentIntegrator
+import com.vk.sdk.VKAccessToken
+import com.vk.sdk.VKCallback
+import com.vk.sdk.VKSdk
+import com.vk.sdk.api.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -43,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
         loginViaFacebook()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+
 //        api.register(User(-1,"ezhan9800@gmail.com", "Yerzhan", "1234", 21, "Helllo2", App.fcmDeviceId))
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())
@@ -53,6 +62,20 @@ class LoginActivity : AppCompatActivity() {
         }
         sign_in_button.setOnClickListener {
 
+        }
+        signInVK.setOnClickListener {
+            VKSdk.login(this, "ds","ds")
+        }
+        btnSignUp.setOnClickListener {
+            IntentIntegrator(this).apply {
+                setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES)
+
+                setPrompt("Scan a barcode")
+                setCameraId(0)  // Use a specific camera of the device
+                setBeepEnabled(false)
+                setBarcodeImageEnabled(true)
+                initiateScan()
+            }
         }
     }
 
@@ -141,6 +164,30 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show()
+            }
+        }
+        if (!VKSdk.onActivityResult(requestCode,resultCode,data,object: VKCallback<VKAccessToken>{
+                override fun onResult(res: VKAccessToken?) {
+                    val request = VKApi.users().get(VKParameters.from(res?.userId))
+                    request.executeWithListener(object: VKRequest.VKRequestListener(){
+                        override fun onComplete(response: VKResponse?) {
+                            Log.d("response_vk",response?.responseString)
+                            super.onComplete(response)
+                        }
+                    })
+                }
+
+                override fun onError(error: VKError?) {
+
+                }
+
+            }))
         faceBookCallbackManager.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
             // The Task returned from this call is always completed, no need to attach

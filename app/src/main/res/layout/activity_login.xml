@@ -201,6 +201,7 @@
                 android:layout_height="wrap_content" />
 
         <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/signInVK"
                 android:layout_width="36dp"
                 android:src="@drawable/vk"
                 android:layout_margin="16dp"

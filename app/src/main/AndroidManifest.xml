@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+            android:hardwareAccelerated="true"
             android:name=".App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -26,6 +27,8 @@
 
 
         </activity>
+
+        <activity android:name="com.vk.sdk.VKServiceActivity" android:label="ServiceActivity" android:theme="@style/VK.Transparent" />
 
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>

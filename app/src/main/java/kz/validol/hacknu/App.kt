@@ -3,12 +3,14 @@ package kz.validol.hacknu
 import android.app.Application
 import android.app.Dialog
 import android.content.Context
+import com.vk.sdk.VKSdk
 import org.koin.android.ext.android.startKoin
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        VKSdk.initialize(this)
         startKoin(this, appModules)
     }
 
