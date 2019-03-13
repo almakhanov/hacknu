@@ -24,6 +24,7 @@ import com.google.firebase.auth.GithubAuthProvider
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
+import kz.validol.hacknu.onboarding.OnboardingActivity
 import okhttp3.*
 import org.koin.android.ext.android.inject
 import java.io.IOException
@@ -62,6 +63,11 @@ class LoginActivity : AppCompatActivity() {
         }
         sign_in_button.setOnClickListener {
 
+        }
+
+        signInTextRight.setOnClickListener{
+            val loginIntent = Intent(this, RegisterActivity::class.java)
+            startActivity(loginIntent)
         }
     }
 

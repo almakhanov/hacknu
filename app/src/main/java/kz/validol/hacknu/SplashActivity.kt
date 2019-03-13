@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
-import kz.validol.hacknu.auth.LoginActivity
+import kz.validol.hacknu.onboarding.OnboardingActivity
 import org.koin.android.ext.android.inject
 
 class SplashActivity : AppCompatActivity() {
@@ -43,7 +43,7 @@ class SplashActivity : AppCompatActivity() {
 
         Handler().postDelayed({
             run {
-                val loginIntent = Intent(this, LoginActivity::class.java)
+                val loginIntent = Intent(this, OnboardingActivity::class.java)
                 startActivity(loginIntent)
                 finish()
             }
