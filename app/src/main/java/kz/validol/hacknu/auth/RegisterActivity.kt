@@ -55,6 +55,12 @@ class RegisterActivity : AppCompatActivity() {
 
         loginViaGithub()
 
+        signInTextRight.setOnClickListener{
+            val loginIntent = Intent(this, LoginActivity::class.java)
+            startActivity(loginIntent)
+            finish()
+        }
+
 //        api.register(User(-1,"ezhan9800@gmail.com", "Yerzhan", "1234", 21, "Helllo2", App.fcmDeviceId))
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())

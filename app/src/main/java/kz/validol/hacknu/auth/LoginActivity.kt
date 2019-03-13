@@ -24,6 +24,7 @@ import com.google.firebase.auth.GithubAuthProvider
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
+import kz.validol.hacknu.onboarding.OnboardingActivity
 import okhttp3.*
 import org.koin.android.ext.android.inject
 import java.io.IOException
@@ -62,7 +63,6 @@ class LoginActivity : AppCompatActivity() {
         loginViaGithub()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-
 //        api.register(User(-1,"ezhan9800@gmail.com", "Yerzhan", "1234", 21, "Helllo2", App.fcmDeviceId))
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())
@@ -87,6 +87,11 @@ class LoginActivity : AppCompatActivity() {
                 setBarcodeImageEnabled(true)
                 initiateScan()
             }
+        }
+
+        signInTextRight.setOnClickListener{
+            val loginIntent = Intent(this, RegisterActivity::class.java)
+            startActivity(loginIntent)
         }
     }
 
