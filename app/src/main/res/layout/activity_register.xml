@@ -216,11 +216,11 @@
                 android:layout_height="36dp"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="36dp"
-                android:src="@drawable/twitter"
-                android:id="@+id/twitter"
-                android:layout_margin="16dp"
-                android:layout_height="36dp"/>
+                android:layout_width="44dp"
+                android:src="@drawable/github"
+                android:id="@+id/github"
+                android:layout_margin="12dp"
+                android:layout_height="44dp"/>
 
     </LinearLayout>
 
