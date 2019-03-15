@@ -1,5 +1,6 @@
 package kz.validol.hacknu.auth
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -12,6 +13,7 @@ import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.GraphRequest
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -21,13 +23,18 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GithubAuthProvider
+import com.google.gson.Gson
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_register.*
 import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
+import kz.validol.hacknu.MenuActivity
+import kz.validol.hacknu.entities.User
 import okhttp3.*
 import org.koin.android.ext.android.inject
 import java.io.IOException
@@ -41,7 +48,12 @@ class RegisterActivity : AppCompatActivity() {
     companion object {
         val REDIRECT_URL_CALLBACK = "epam://git.oauth2token"
         var signedGIthub = false
+        val GOOGLE = "google"
+        val GIT = "git"
+        val FACEBOOK= "fb"
+        val VK = "vk"
     }
+
     private val random = SecureRandom()
     private val api: Api by inject()
     private val sharedPref: SharedPreferences by inject()
@@ -66,7 +78,7 @@ class RegisterActivity : AppCompatActivity() {
         loginViaFacebook()
         loginViaGithub()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        signInTextRight.setOnClickListener{
+        signInTextRight.setOnClickListener {
             val loginIntent = Intent(this, LoginActivity::class.java)
             startActivity(loginIntent)
             finish()
@@ -77,23 +89,54 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         vk_sign_in.setOnClickListener {
-            VKSdk.login(this, "ds","ds")
+            VKSdk.login(this, "ds", "ds")
         }
 
-//        api.register(User(-1,"ezhan9800@gmail.com", "Yerzhan", "1234", 21, "Helllo2", App.fcmDeviceId))
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe()
+        btnSignUp.setOnClickListener{
+            val user= User(
+                name = mName.text.toString(),
+                email = mPhone.unmaskedText,
+                //mPosition
+                password = edit_text_sign_in_password.text.toString()
+            )
+            signUp(user)
+        }
     }
+
+    @SuppressLint("CheckResult")
+    private fun signUp(user: User) {
+        user.FCMToken = App.fcmDeviceId
+        api.register(user)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (it.code == 0) {
+                    App.user = user
+                    startActivity(Intent(this, MenuActivity::class.java))
+                    finish()
+                }
+            }, {
+                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+            })
+    }
+
 
     private fun loginViaGithub() {
         mAuth = FirebaseAuth.getInstance()
 
         mAuthListener = FirebaseAuth.AuthStateListener {
             val user = it.currentUser
-            if(user != null){
+            if (user != null) {
                 signedGIthub = true
                 Log.d("accepted", user.email)
+                val gitUser = User(
+                    name = user.displayName,
+                    email = user.email,
+                    password = GIT
+                )
+                App.profilePhotoUri = user.photoUrl
+                signUp(gitUser)
+                FirebaseAuth.getInstance().signOut()
             }
         }
 
@@ -106,7 +149,7 @@ class RegisterActivity : AppCompatActivity() {
                 sendPost(code, state)
         }
 
-        github.setOnClickListener{
+        github.setOnClickListener {
             signInOut()
         }
     }
@@ -123,46 +166,29 @@ class RegisterActivity : AppCompatActivity() {
                 val request = GraphRequest.newMeRequest(
                     loginResult.accessToken
                 ) { obj, response ->
+                    val facebookUser = User()
                     obj.getString("id")?.let {
                         Log.v("accepted", it)
+                        facebookUser.email = it
+                        //http://graph.facebook.com/67563683055/picture?type=square
+                        facebookUser.photo = "http://graph.facebook.com/" + it + "/picture?type=square"
                     }
                     obj.getString("birthday")?.let {
-                        Log.v("accepted", it)
-                    }
-                    obj.getString("first_name")?.let {
-                        Log.v("accepted", it)
-                    }
-                    if (obj.has("gender")) {
-                        obj.getString("gender")?.let {
-                            Log.v("accepted", it)
-                        }
-                    }
-                    obj.getString("last_name")?.let {
-                        Log.v("accepted", it)
-                    }
-                    if (obj.has("link")) {
-                        obj.getString("link")?.let {
-                            Log.v("accepted", it)
-                        }
-                    }
-                    if (obj.has("location")) {
-                        obj.getString("location")?.let {
-                            Log.v("accepted", it)
-                        }
-                    }
-                    if (obj.has("locale")) {
-                        obj.getString("locale")?.let {
-                            Log.v("accepted", it)
-                        }
+                        val strs = it.split('/')
+                        facebookUser.age = 2019 - strs[2].toInt()
                     }
                     obj.getString("name")?.let {
                         Log.v("accepted", it)
+                        facebookUser.name = it
                     }
                     if (obj.has("email")) {
                         obj.getString("email")?.let {
                             Log.v("accepted", it)
                         }
                     }
+                    facebookUser.password = FACEBOOK
+                    signUp(facebookUser)
+                    LoginManager.getInstance().logOut()
                 }
                 val parameters = Bundle()
                 parameters.putString(
@@ -197,12 +223,22 @@ class RegisterActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
-        if (!VKSdk.onActivityResult(requestCode,resultCode,data,object: VKCallback<VKAccessToken> {
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
                 override fun onResult(res: VKAccessToken?) {
                     val request = VKApi.users().get(VKParameters.from(res?.userId))
-                    request.executeWithListener(object: VKRequest.VKRequestListener(){
+                    request.executeWithListener(object : VKRequest.VKRequestListener() {
                         override fun onComplete(response: VKResponse?) {
-                            Log.d("response_vk",response?.responseString)
+                            Log.d("response_vk", response?.responseString)
+                            val vkUserObj: VKObject = Gson().fromJson(
+                                response?.responseString, VKObject::class.java)
+
+                            val vkUser = User(
+                                email = vkUserObj.response[0].id.toString(),
+                                name = vkUserObj.response[0].first_name+ ' '+
+                                        vkUserObj.response[0].last_name,
+                                password = VK
+                            )
+                            signUp(vkUser)
                             super.onComplete(response)
                         }
                     })
@@ -213,22 +249,23 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
             }))
-        super.onActivityResult(requestCode, resultCode, data)
+            super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             account?.let {
-                Log.d("result_google",account.displayName)
+                Log.d("result_google", account.displayName)
+                val gUser = User(
+                    name = account.displayName,
+                    email = account.email,
+                    password = GOOGLE
+                )
+                App.profilePhotoUri = account.photoUrl
+                signUp(gUser)
             }
-            // Signed in successfully, show authenticated UI.
-//            updateUI(account)
         } catch (e: ApiException) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-//            Log.w(FragmentActivity.TAG, "signInResult:failed code=" + e.statusCode)
-//            updateUI(null)
         }
 
     }
@@ -282,20 +319,19 @@ class RegisterActivity : AppCompatActivity() {
 
 
         okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-                Toast.makeText(this@RegisterActivity, "onFailure: " + e.toString(), Toast.LENGTH_SHORT).show()
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                //access_token=e72e16c7e42f292c6912e7710c838347ae178b4a&token_type=bearer
+            override fun onResponse(call: Call, response: okhttp3.Response) {
+//access_token=e72e16c7e42f292c6912e7710c838347ae178b4a&token_type=bearer
                 val responseBody = response.body()?.string()
                 val splitted = responseBody?.split("=|&".toRegex())?.dropLastWhile({ it.isEmpty() })!!.toTypedArray()
                 if (splitted[0].equals("access_token", ignoreCase = true))
                     signInWithToken(splitted[1])
                 else
                     Toast.makeText(this@RegisterActivity, "splitted[0] =>" + splitted[0], Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                Toast.makeText(this@RegisterActivity, "onFailure: " + e.toString(), Toast.LENGTH_SHORT).show()
             }
         })
     }

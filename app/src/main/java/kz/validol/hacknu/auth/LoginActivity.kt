@@ -1,5 +1,6 @@
 package kz.validol.hacknu.auth
 
+//import android.support.test.orchestrator.junit.BundleJUnitUtils.getResult
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -12,6 +13,7 @@ import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.GraphRequest
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -21,26 +23,25 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GithubAuthProvider
+import com.google.gson.Gson
+import com.google.zxing.integration.android.IntentIntegrator
+import com.vk.sdk.VKAccessToken
+import com.vk.sdk.VKCallback
+import com.vk.sdk.VKSdk
+import com.vk.sdk.api.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
-import kz.validol.hacknu.onboarding.OnboardingActivity
+import kz.validol.hacknu.auth.RegisterActivity.Companion.FACEBOOK
+import kz.validol.hacknu.auth.RegisterActivity.Companion.GIT
+import kz.validol.hacknu.auth.RegisterActivity.Companion.GOOGLE
+import kz.validol.hacknu.auth.RegisterActivity.Companion.VK
 import okhttp3.*
 import org.koin.android.ext.android.inject
 import java.io.IOException
 import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
-import android.R.attr.data
-import android.content.Context
-//import android.support.test.orchestrator.junit.BundleJUnitUtils.getResult
-import android.support.v4.app.FragmentActivity
-import com.google.firebase.FirebaseApp
-import com.google.zxing.integration.android.IntentIntegrator
-import com.vk.sdk.VKAccessToken
-import com.vk.sdk.VKCallback
-import com.vk.sdk.VKSdk
-import com.vk.sdk.api.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -63,11 +64,6 @@ class LoginActivity : AppCompatActivity() {
         loginViaGithub()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-//        api.register(User(-1,"ezhan9800@gmail.com", "Yerzhan", "1234", 21, "Helllo2", App.fcmDeviceId))
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe()
-
         googleSignIn.setOnClickListener {
             signInGoogle()
         }
@@ -78,15 +74,7 @@ class LoginActivity : AppCompatActivity() {
             VKSdk.login(this, "ds","ds")
         }
         btnSignUp.setOnClickListener {
-            IntentIntegrator(this).apply {
-                setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES)
-
-                setPrompt("Scan a barcode")
-                setCameraId(0)  // Use a specific camera of the device
-                setBeepEnabled(false)
-                setBarcodeImageEnabled(true)
-                initiateScan()
-            }
+            login(mPhone.unmaskedText, edit_text_sign_in_password.text.toString())
         }
 
         signInTextRight.setOnClickListener{
@@ -94,6 +82,22 @@ class LoginActivity : AppCompatActivity() {
             startActivity(loginIntent)
         }
     }
+
+    private fun login(username: String, password: String){
+//        api.login(username, password)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                if (it.code == 0) {
+//                    App.user = it.user
+//                    startActivity(Intent(this, MenuActivity::class.java))
+//                    finish()
+//                }
+//            }, {
+//                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+//            })
+    }
+
 
     private fun signInGoogle() {
         val signInIntent = mGoogleSignInClient?.getSignInIntent()
@@ -118,46 +122,8 @@ class LoginActivity : AppCompatActivity() {
                 val request = GraphRequest.newMeRequest(
                     loginResult.accessToken
                 ) { obj, response ->
-                    obj.getString("id")?.let {
-                        Log.v("accepted", it)
-                    }
-                    obj.getString("birthday")?.let {
-                        Log.v("accepted", it)
-                    }
-                    obj.getString("first_name")?.let {
-                        Log.v("accepted", it)
-                    }
-                    if (obj.has("gender")) {
-                        obj.getString("gender")?.let {
-                            Log.v("accepted", it)
-                        }
-                    }
-                    obj.getString("last_name")?.let {
-                        Log.v("accepted", it)
-                    }
-                    if (obj.has("link")) {
-                        obj.getString("link")?.let {
-                            Log.v("accepted", it)
-                        }
-                    }
-                    if (obj.has("location")) {
-                        obj.getString("location")?.let {
-                            Log.v("accepted", it)
-                        }
-                    }
-                    if (obj.has("locale")) {
-                        obj.getString("locale")?.let {
-                            Log.v("accepted", it)
-                        }
-                    }
-                    obj.getString("name")?.let {
-                        Log.v("accepted", it)
-                    }
-                    if (obj.has("email")) {
-                        obj.getString("email")?.let {
-                            Log.v("accepted", it)
-                        }
-                    }
+                    login(obj.getString("id"), FACEBOOK)
+                    LoginManager.getInstance().logOut()
                 }
                 val parameters = Bundle()
                 parameters.putString(
@@ -194,6 +160,10 @@ class LoginActivity : AppCompatActivity() {
                     request.executeWithListener(object: VKRequest.VKRequestListener(){
                         override fun onComplete(response: VKResponse?) {
                             Log.d("response_vk",response?.responseString)
+                            val vkUserObj: VKObject = Gson().fromJson(
+                                response?.responseString, VKObject::class.java)
+
+                            login(vkUserObj.response[0].id.toString(),VK)
                             super.onComplete(response)
                         }
                     })
@@ -219,6 +189,8 @@ class LoginActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
             account?.let {
                 Log.d("result_google",account.displayName)
+                App.profilePhotoUri = account.photoUrl
+                login(account.email!!, GOOGLE)
             }
             // Signed in successfully, show authenticated UI.
 //            updateUI(account)
@@ -239,6 +211,9 @@ class LoginActivity : AppCompatActivity() {
             if(user != null){
                 RegisterActivity.signedGIthub = true
                 Log.d("accepted", user.email)
+                App.profilePhotoUri = user.photoUrl
+                login(user.email!!, GIT)
+                FirebaseAuth.getInstance().signOut()
             }
         }
 
@@ -304,20 +279,18 @@ class LoginActivity : AppCompatActivity() {
 
 
         okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-                Toast.makeText(this@LoginActivity, "onFailure: " + e.toString(), Toast.LENGTH_SHORT).show()
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                //access_token=e72e16c7e42f292c6912e7710c838347ae178b4a&token_type=bearer
+            override fun onResponse(call: Call, response: okhttp3.Response) {
+//access_token=e72e16c7e42f292c6912e7710c838347ae178b4a&token_type=bearer
                 val responseBody = response.body()?.string()
                 val splitted = responseBody?.split("=|&".toRegex())?.dropLastWhile({ it.isEmpty() })!!.toTypedArray()
                 if (splitted[0].equals("access_token", ignoreCase = true))
                     signInWithToken(splitted[1])
                 else
-                    Toast.makeText(this@LoginActivity, "splitted[0] =>" + splitted[0], Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "splitted[0] =>" + splitted[0], Toast.LENGTH_SHORT).show()            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                Toast.makeText(this@LoginActivity, "onFailure: " + e.toString(), Toast.LENGTH_SHORT).show()
             }
         })
     }
