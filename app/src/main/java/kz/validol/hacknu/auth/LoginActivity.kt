@@ -41,6 +41,7 @@ import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.*
+import kz.validol.hacknu.MenuActivity
 
 
 class LoginActivity : AppCompatActivity() {
@@ -78,15 +79,8 @@ class LoginActivity : AppCompatActivity() {
             VKSdk.login(this, "ds","ds")
         }
         btnSignUp.setOnClickListener {
-            IntentIntegrator(this).apply {
-                setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES)
-
-                setPrompt("Scan a barcode")
-                setCameraId(0)  // Use a specific camera of the device
-                setBeepEnabled(false)
-                setBarcodeImageEnabled(true)
-                initiateScan()
-            }
+            val intent = Intent(this,MenuActivity::class.java)
+            startActivity(intent)
         }
 
         signInTextRight.setOnClickListener{
