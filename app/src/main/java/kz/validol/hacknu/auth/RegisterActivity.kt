@@ -13,8 +13,18 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.GraphRequest
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GithubAuthProvider
+import com.vk.sdk.VKAccessToken
+import com.vk.sdk.VKCallback
+import com.vk.sdk.VKSdk
+import com.vk.sdk.api.*
 import kotlinx.android.synthetic.main.activity_register.*
 import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
@@ -38,7 +48,7 @@ class RegisterActivity : AppCompatActivity() {
     private val faceBookCallbackManager = CallbackManager.Factory.create()
     private var mAuth: FirebaseAuth? = null
     private var mAuthListener: FirebaseAuth.AuthStateListener? = null
-
+    private var mGoogleSignInClient: GoogleSignInClient? = null
 
     override fun onStart() {
         super.onStart()
@@ -50,15 +60,24 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(kz.validol.hacknu.R.layout.activity_register)
 
         edit_text_sign_in_password.setTintColor(Color.parseColor("#c0c5ce"))
-
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
         loginViaFacebook()
-
         loginViaGithub()
-
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         signInTextRight.setOnClickListener{
             val loginIntent = Intent(this, LoginActivity::class.java)
             startActivity(loginIntent)
             finish()
+        }
+
+        google_sign_in.setOnClickListener {
+            signInGoogle()
+        }
+
+        vk_sign_in.setOnClickListener {
+            VKSdk.login(this, "ds","ds")
         }
 
 //        api.register(User(-1,"ezhan9800@gmail.com", "Yerzhan", "1234", 21, "Helllo2", App.fcmDeviceId))
@@ -165,9 +184,53 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
+    private fun signInGoogle() {
+        val signInIntent = mGoogleSignInClient?.getSignInIntent()
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         faceBookCallbackManager.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
+        if (!VKSdk.onActivityResult(requestCode,resultCode,data,object: VKCallback<VKAccessToken> {
+                override fun onResult(res: VKAccessToken?) {
+                    val request = VKApi.users().get(VKParameters.from(res?.userId))
+                    request.executeWithListener(object: VKRequest.VKRequestListener(){
+                        override fun onComplete(response: VKResponse?) {
+                            Log.d("response_vk",response?.responseString)
+                            super.onComplete(response)
+                        }
+                    })
+                }
+
+                override fun onError(error: VKError?) {
+
+                }
+
+            }))
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            account?.let {
+                Log.d("result_google",account.displayName)
+            }
+            // Signed in successfully, show authenticated UI.
+//            updateUI(account)
+        } catch (e: ApiException) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+//            Log.w(FragmentActivity.TAG, "signInResult:failed code=" + e.statusCode)
+//            updateUI(null)
+        }
+
     }
 
     fun signInOut() {
