@@ -24,8 +24,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GithubAuthProvider
 import com.google.gson.Gson
-import com.vk.sdk.VKAccessToken
-import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.*
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,10 +46,10 @@ class RegisterActivity : AppCompatActivity() {
     companion object {
         val REDIRECT_URL_CALLBACK = "epam://git.oauth2token"
         var signedGIthub = false
-        val GOOGLE = "google"
-        val GIT = "git"
-        val FACEBOOK= "fb"
-        val VK = "vk"
+        val GOOGLE = "password"
+        val GIT = "password"
+        val FACEBOOK = "password"
+        val VK = "password"
     }
 
     private val random = SecureRandom()
@@ -65,6 +63,15 @@ class RegisterActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         mAuth?.addAuthStateListener(mAuthListener!!)
+    }
+
+    fun putLogined() {
+        val editor = sharedPref.edit()
+        editor.putBoolean(LoginActivity.IS_LOGINED, true)
+        editor.putString(LoginActivity.USERNAME, App.user?.phone)
+        editor.putString(LoginActivity.PASSW, App.user?.password)
+        editor.putString(LoginActivity.FCMTOKEN, App.user?.token)
+        editor.apply()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,11 +99,11 @@ class RegisterActivity : AppCompatActivity() {
             VKSdk.login(this, "ds", "ds")
         }
 
-        btnSignUp.setOnClickListener{
-            val user= User(
+        btnSignUp.setOnClickListener {
+            val user = User(
                 name = mName.text.toString(),
-                email = mPhone.unmaskedText,
-                //mPosition
+                phone = mPhone.unmaskedText,
+                position = mPosition.text.toString(),
                 password = edit_text_sign_in_password.text.toString()
             )
             signUp(user)
@@ -105,19 +112,32 @@ class RegisterActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun signUp(user: User) {
-        user.FCMToken = App.fcmDeviceId
+        if (!checkFields()) return
+        user.token = App.fcmDeviceId
+        user.email = user.phone
+        user.position = mPosition.text.toString()
         api.register(user)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (it.code == 0) {
                     App.user = user
+                    putLogined()
                     startActivity(Intent(this, MenuActivity::class.java))
                     finish()
                 }
             }, {
                 Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
             })
+    }
+
+    private fun checkFields(): Boolean {
+        return if (mPosition.text.isEmpty()) {
+            Toast.makeText(this, "Fill your position!", Toast.LENGTH_LONG).show()
+            false
+        } else {
+            true
+        }
     }
 
 
@@ -130,8 +150,9 @@ class RegisterActivity : AppCompatActivity() {
                 signedGIthub = true
                 Log.d("accepted", user.email)
                 val gitUser = User(
-                    name = user.displayName,
-                    email = user.email,
+                    name = "Nursultan Almakhanov",
+                    phone = user.email,
+                    photo = "https://avatars2.githubusercontent.com/u/25146955?s=460&v=4",
                     password = GIT
                 )
                 App.profilePhotoUri = user.photoUrl
@@ -169,7 +190,7 @@ class RegisterActivity : AppCompatActivity() {
                     val facebookUser = User()
                     obj.getString("id")?.let {
                         Log.v("accepted", it)
-                        facebookUser.email = it
+                        facebookUser.phone = it
                         //http://graph.facebook.com/67563683055/picture?type=square
                         facebookUser.photo = "http://graph.facebook.com/" + it + "/picture?type=square"
                     }
@@ -223,60 +244,40 @@ class RegisterActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
-        if (!VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
-                override fun onResult(res: VKAccessToken?) {
-//                    val request = VKApi.users().get(VKParameters.from(res?.userId))
-//                    request.executeWithListener(object : VKRequest.VKRequestListener() {
-//                        override fun onComplete(response: VKResponse?) {
-//                            Log.d("response_vk", response?.responseString)
-//                            val vkUserObj: VKObject = Gson().fromJson(
-//                                response?.responseString, VKObject::class.java)
-//
-//                            val vkUser = User(
-//                                email = vkUserObj.response[0].id.toString(),
-//                                name = vkUserObj.response[0].first_name+ ' '+
-//                                        vkUserObj.response[0].last_name,
-//                                password = VK
-//                            )
-//                            signUp(vkUser)
-//                            super.onComplete(response)
-//                        }
-//                    })
-                    val requestphoto = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS,"photo_400"))
-                    requestphoto.executeWithListener(object : VKRequest.VKRequestListener() {
-                        override fun onComplete(response: VKResponse?) {
-                            Log.d("response_vk_image", response?.responseString)
-                            val vkUserObj: VKObject = Gson().fromJson(
-                                response?.responseString, VKObject::class.java)
 
-                            val vkUser = User(
-                                email = vkUserObj.response[0].id.toString(),
-                                name = vkUserObj.response[0].first_name+ ' '+
-                                        vkUserObj.response[0].last_name,
-                                password = VK
-                            )
-                            signUp(vkUser)
-                            super.onComplete(response)
-                        }
-                    })
-                }
+        val requestphoto = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "photo_400"))
+        requestphoto.executeWithListener(object : VKRequest.VKRequestListener() {
+            override fun onComplete(response: VKResponse?) {
+                Log.d("response_vk_image", response?.responseString)
+                val vkUserObj: VKObject = Gson().fromJson(
+                    response?.responseString, VKObject::class.java
+                )
 
-                override fun onError(error: VKError?) {
+                val vkUser = User(
+                    email = vkUserObj.response[0].id.toString(),
+                    phone = vkUserObj.response[0].id.toString(),
+                    name = vkUserObj.response[0].first_name + ' ' + vkUserObj.response[0].last_name,
+                    photo = vkUserObj.response[0].photo_400,
+                    password = VK
+                )
+                signUp(vkUser)
+                super.onComplete(response)
+            }
+        })
 
-                }
-
-            }))
-            super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             account?.let {
-                Log.d("result_google", account.displayName)
+                Log.d("result_google", account.photoUrl.toString())
+
                 val gUser = User(
                     name = account.displayName,
-                    email = account.email,
+                    phone = account.email,
+                    photo = account.photoUrl.toString(),
                     password = GOOGLE
                 )
                 App.profilePhotoUri = account.photoUrl
