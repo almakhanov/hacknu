@@ -32,6 +32,7 @@ import com.vk.sdk.api.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
+import kz.validol.hacknu.MenuActivity
 import kz.validol.hacknu.auth.RegisterActivity.Companion.FACEBOOK
 import kz.validol.hacknu.auth.RegisterActivity.Companion.GIT
 import kz.validol.hacknu.auth.RegisterActivity.Companion.GOOGLE
@@ -84,6 +85,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(username: String, password: String){
+        startActivity(Intent(this, MenuActivity::class.java))
+        finish()
 //        api.login(username, password)
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())
