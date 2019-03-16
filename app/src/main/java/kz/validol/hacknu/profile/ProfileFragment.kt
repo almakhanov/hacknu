@@ -24,9 +24,9 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        signout.setOnClickListener{
-            logout()
-        }
+//        signout.setOnClickListener{
+//            logout()
+//        }
     }
 
     fun logout(){
