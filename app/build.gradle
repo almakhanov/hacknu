@@ -72,7 +72,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.vk:androidsdk:1.6.5'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
-    
+
 }
 
 apply plugin: 'com.google.gms.google-services'

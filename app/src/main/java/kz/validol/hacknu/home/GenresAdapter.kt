@@ -33,11 +33,11 @@ class GenresAdapter(private var dataset: ArrayList<GenreItem>,
         }
 
         override fun onClick(p0: View?) {
-            listener.onItemClicked(dataset[adapterPosition])
+            listener.onGenreItemClicked(dataset[adapterPosition])
         }
     }
 
     interface OnItemClickListener {
-        fun onItemClicked(item: GenreItem)
+        fun onGenreItemClicked(item: GenreItem)
     }
 }

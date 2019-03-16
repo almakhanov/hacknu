@@ -1,6 +1,7 @@
 package kz.validol.hacknu.auth
 
 //import android.support.test.orchestrator.junit.BundleJUnitUtils.getResult
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -29,6 +30,8 @@ import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
 import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
@@ -46,6 +49,13 @@ import java.util.*
 
 
 class LoginActivity : AppCompatActivity() {
+
+    companion object {
+        const val IS_LOGINED = "IS_LOGINED"
+        const val USERNAME = "USERNAME"
+        const val PASSW = "PASSW"
+        const val FCMTOKEN = "FCMTOKEN"
+    }
 
     private val api: Api by inject()
     private val random = SecureRandom()
@@ -84,23 +94,33 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun login(username: String, password: String){
-        startActivity(Intent(this, MenuActivity::class.java))
-        finish()
-//        api.login(username, password)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({
-//                if (it.code == 0) {
-//                    App.user = it.user
-//                    startActivity(Intent(this, MenuActivity::class.java))
-//                    finish()
-//                }
-//            }, {
-//                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
-//            })
+    fun putLogined(){
+        val editor = sharedPref.edit()
+        editor.putBoolean(IS_LOGINED, true)
+        editor.putString(USERNAME, App.user?.phone)
+        editor.putString(PASSW, App.user?.password)
+        editor.putString(FCMTOKEN, App.user?.token)
+        editor.apply()
     }
 
+    @SuppressLint("CheckResult")
+    private fun login(username: String, password: String){
+//        startActivity(Intent(this, MenuActivity::class.java))
+//        finish()
+        api.login(username, password, App.fcmDeviceId, username)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (it.code == 0) {
+                    App.user = it.user
+                    putLogined()
+                    startActivity(Intent(this, MenuActivity::class.java))
+                    finish()
+                }
+            }, {
+                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+            })
+    }
 
     private fun signInGoogle() {
         val signInIntent = mGoogleSignInClient?.getSignInIntent()
