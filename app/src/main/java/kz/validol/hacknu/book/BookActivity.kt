@@ -1,6 +1,6 @@
 package kz.validol.hacknu.book
 
-import android.animation.ObjectAnimator
+
 import android.graphics.BitmapFactory
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,7 +10,6 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.animation.OvershootInterpolator
 import android.widget.LinearLayout
-import com.bumptech.glide.Glide
 import jp.wasabeef.blurry.Blurry
 import kotlinx.android.synthetic.main.activity_book.*
 import kz.validol.hacknu.R

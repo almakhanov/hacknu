@@ -37,7 +37,7 @@ class OnBoardingFragment: Fragment(){
             }
             1 -> {
                 lottie?.setAnimation(R.raw.scann)
-                title.text = "Hire book"
+                title.text = "Borrow book"
                 desc.text = "Scan barcode of the book and hire it fast and easily."
             }
             else -> {

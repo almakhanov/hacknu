@@ -30,4 +30,6 @@ interface Api {
 
     @GET("getGenreBooks/")
     fun getGenreBooks(@Query("genre") genre: String): Observable<List<Book>>
+
+//    @GET("")
 }

@@ -1,23 +1,32 @@
 package kz.validol.hacknu.scanner
 
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import kz.validol.hacknu.Api
 
 import kz.validol.hacknu.R
+import kz.validol.hacknu.book.BookActivity
+import kz.validol.hacknu.entities.Book
+import org.koin.android.ext.android.inject
+import org.koin.standalone.KoinComponent
 
-class ScannerFragment : Fragment() {
+class ScannerFragment : Fragment(), KoinComponent {
 
     private lateinit var qrCodeView: DecoratedBarcodeView
+    private val api: Api by inject()
 
 
     override fun onCreateView(
@@ -30,6 +39,15 @@ class ScannerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindView(view)
+//        val builder = AlertDialog.Builder(context)
+//        val view = LayoutInflater.from(context).inflate(R.layout.qr_code_response,null)
+//        val closeBtn = view.findViewById<Button>(R.id.close)
+//        builder.setView(view)
+//        val dialog = builder.create()
+//        closeBtn.setOnClickListener {
+//            dialog.dismiss()
+//        }
+//        dialog.show()
     }
 
     override fun onResume() {
@@ -50,9 +68,9 @@ class ScannerFragment : Fragment() {
             resume()
             decodeContinuous(object: BarcodeCallback {
                 override fun barcodeResult(result: BarcodeResult?) {
-                    Log.d("Qrcode_result", result?.toString())
-                    Log.d("Qrcode_result", result?.text ?: "null")
-
+                    val intent = Intent(context,BookActivity::class.java)
+                    intent.putExtra("isbn","984343434")
+                    startActivity(intent)
                 }
 
                 override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {
