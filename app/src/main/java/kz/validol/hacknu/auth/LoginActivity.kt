@@ -91,6 +91,7 @@ class LoginActivity : AppCompatActivity() {
         signInTextRight.setOnClickListener{
             val loginIntent = Intent(this, RegisterActivity::class.java)
             startActivity(loginIntent)
+            finish()
         }
     }
 
