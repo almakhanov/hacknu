@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_book.view.*
+import kz.validol.hacknu.R
 import kz.validol.hacknu.entities.Book
 
 
@@ -45,12 +46,12 @@ class AllBooksAdapter(
 
             val options = RequestOptions()
                 .centerCrop()
-                .placeholder(kz.validol.hacknu.R.mipmap.ic_launcher_round)
-                .error(kz.validol.hacknu.R.mipmap.ic_launcher_round)
+                .placeholder(R.drawable.ic_color_lens_black_24dp)
+                .error(R.drawable.ic_color_lens_black_24dp)
 
             itemView.tvTitleBook.text = item?.name
             itemView.authorBook.text = item?.author
-            itemView.rating.rating = 2.7F
+            itemView.rating.rating = item?.rating!!
 
             Glide.with(context)
                 .load(item?.photo)

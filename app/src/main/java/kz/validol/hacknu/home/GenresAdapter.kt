@@ -27,8 +27,8 @@ class GenresAdapter(private var dataset: ArrayList<GenreItem>,
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         fun bind(item: GenreItem){
-            itemView.ivIconGenre.setImageResource(item.img)
-            itemView.genreItemText.text = item.value
+            itemView.ivIconGenre.setImageResource(item.img!!)
+            itemView.genreItemText.text = item.name
             itemView.setOnClickListener(this)
         }
 

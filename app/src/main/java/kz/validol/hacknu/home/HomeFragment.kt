@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -19,6 +18,7 @@ import kz.validol.hacknu.Api
 import kz.validol.hacknu.MenuActivity
 import kz.validol.hacknu.R
 import kz.validol.hacknu.Singleton
+import kz.validol.hacknu.book.BookActivity
 import kz.validol.hacknu.entities.Book
 import kz.validol.hacknu.genre_list.GenreListActivity
 import org.koin.android.ext.android.inject
@@ -35,12 +35,14 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
 
     override fun onGenreItemClicked(item: GenreItem) {
         val tmpIntent = Intent(activity, GenreListActivity::class.java)
-        tmpIntent.putExtra(GenreListActivity.KEY_GENRE, item.value)
+        tmpIntent.putExtra(GenreListActivity.KEY_GENRE, item.name)
         startActivity(tmpIntent)
     }
 
     override fun onBookItemClicked(item: Book) {
-
+        val intt = Intent(activity, BookActivity::class.java)
+        intt.putExtra(BookActivity.BOOK_ISNB, item.isbn)
+        startActivity(intt)
     }
 
 
@@ -75,7 +77,7 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
 
     @SuppressLint("CheckResult")
     private fun getFreeBooks() {
-        freeBooksRecycler.layoutManager = GridLayoutManager(activity, 2)
+        freeBooksRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         freeBooksRecycler.adapter = allBooksAdapter
         api.getBooks().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

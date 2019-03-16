@@ -17,7 +17,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_width="match_parent"
-                    android:src="@drawable/book_tmp"
+                    android:src="@color/colorWhite"
                     android:scaleType="centerCrop"
                     android:layout_height="260dp"/>
 
@@ -95,6 +95,8 @@
                     android:textColor="#fff"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"/>
 
@@ -117,13 +119,14 @@
                     android:layout_marginTop="8dp"
                     style="@style/customRatingBar"
                     android:progressTint="@color/colorBlue"
-                    android:stepSize="0.5"
+                    android:stepSize="0.1"
                     android:rating="5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
 
             <TextView
+                    android:id="@+id/NOTtakenBtn"
                     app:layout_constraintStart_toStartOf="@id/rating"
                     app:layout_constraintTop_toBottomOf="@id/rating"
                     android:layout_marginTop="16dp"
@@ -138,6 +141,7 @@
 
 
             <TextView
+                    android:id="@+id/takenBtn"
                     app:layout_constraintStart_toStartOf="@id/rating"
                     app:layout_constraintTop_toBottomOf="@id/rating"
                     android:text="was taken by Borya"
@@ -174,7 +178,7 @@
                                     android:layout_marginTop="16dp"
                                     android:layout_marginStart="16dp"
                                     android:id="@+id/authorLogo"
-                                    android:src="@drawable/author"
+                                    android:src="@drawable/ic_person_black_24dp"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"/>
 
@@ -195,8 +199,11 @@
                                     app:layout_constraintTop_toBottomOf="@id/authorTitle"
                                     app:layout_constraintStart_toStartOf="@id/authorTitle"
                                     android:text="BoryaBorsiov"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_width="0dp"
+                                    android:maxLines="1"
+                                    android:ellipsize="end"
+                                    android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
+                                    android:layout_marginEnd="8dp"/>
 
                         </android.support.constraint.ConstraintLayout>
 
@@ -212,7 +219,7 @@
                                     android:layout_marginTop="16dp"
                                     android:layout_marginStart="16dp"
                                     android:id="@+id/dateIcon"
-                                    android:src="@drawable/date"
+                                    android:src="@drawable/ic_date_range_black_24dp"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"/>
 
@@ -232,7 +239,7 @@
                                     android:id="@+id/date"
                                     app:layout_constraintTop_toBottomOf="@id/dateTitle"
                                     app:layout_constraintStart_toStartOf="@id/dateTitle"
-                                    android:text="12.04.2011"
+                                    android:text="17.03.2019"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"/>
                         </android.support.constraint.ConstraintLayout>
