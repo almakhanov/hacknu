@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:layout_margin="8dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+                                                 android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/avatar"
+                android:src="@drawable/avatar_tmp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
+
+        <TextView
+                android:id="@+id/userName"
+                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintTop_toTopOf="@id/avatar"
+                android:text="Borya Borysov"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:layout_marginStart="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/userName"
+                app:layout_constraintStart_toStartOf="@id/userName"
+                android:layout_marginTop="8dp"
+                android:text="12.03.2019"
+                android:layout_height="match_parent"/>
+
+
+        <TextView
+                android:id="@+id/commentText"
+                app:layout_constraintTop_toBottomOf="@id/date"
+                app:layout_constraintStart_toStartOf="@id/avatar"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:text="asdfasdf sadf asdf sadf  asdfasd fasdf sadf asdf sadf fdsfsdfsdfsd fsd fsd fsdf sdf sdf sdfs dfsdfsd fsd fsdf sdf sdfs dfsdfsdff"
+                android:layout_width="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="16dp"
+                android:layout_height="wrap_content"/>
+
+
+
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.v7.widget.CardView>

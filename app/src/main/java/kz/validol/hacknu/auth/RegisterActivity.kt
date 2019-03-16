@@ -225,10 +225,27 @@ class RegisterActivity : AppCompatActivity() {
         }
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
                 override fun onResult(res: VKAccessToken?) {
-                    val request = VKApi.users().get(VKParameters.from(res?.userId))
-                    request.executeWithListener(object : VKRequest.VKRequestListener() {
+//                    val request = VKApi.users().get(VKParameters.from(res?.userId))
+//                    request.executeWithListener(object : VKRequest.VKRequestListener() {
+//                        override fun onComplete(response: VKResponse?) {
+//                            Log.d("response_vk", response?.responseString)
+//                            val vkUserObj: VKObject = Gson().fromJson(
+//                                response?.responseString, VKObject::class.java)
+//
+//                            val vkUser = User(
+//                                email = vkUserObj.response[0].id.toString(),
+//                                name = vkUserObj.response[0].first_name+ ' '+
+//                                        vkUserObj.response[0].last_name,
+//                                password = VK
+//                            )
+//                            signUp(vkUser)
+//                            super.onComplete(response)
+//                        }
+//                    })
+                    val requestphoto = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS,"photo_400"))
+                    requestphoto.executeWithListener(object : VKRequest.VKRequestListener() {
                         override fun onComplete(response: VKResponse?) {
-                            Log.d("response_vk", response?.responseString)
+                            Log.d("response_vk_image", response?.responseString)
                             val vkUserObj: VKObject = Gson().fromJson(
                                 response?.responseString, VKObject::class.java)
 

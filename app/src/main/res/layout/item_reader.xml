@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             android:layout_width="wrap_content"
+                                             android:layout_height="wrap_content"
+                                             android:padding="8dp"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@id/fullName"
+            app:layout_constraintEnd_toEndOf="@id/fullName"
+            android:src="@drawable/avatar_tmp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+    <TextView
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/fullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/avatar"
+            android:textStyle="bold"
+            android:text="Borya Telzhanov"
+    />
+
+    <TextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/fullName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="developer"
+
+    />
+
+
+
+</android.support.constraint.ConstraintLayout>
