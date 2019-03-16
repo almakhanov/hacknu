@@ -1,6 +1,7 @@
 package kz.validol.hacknu.scanner
 
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -15,7 +16,10 @@ import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kz.validol.hacknu.Api
+import kz.validol.hacknu.App
 
 import kz.validol.hacknu.R
 import kz.validol.hacknu.book.BookActivity
@@ -67,7 +71,16 @@ class ScannerFragment : Fragment(), KoinComponent {
         qrCodeView.apply {
             resume()
             decodeContinuous(object: BarcodeCallback {
+                @SuppressLint("CheckResult")
                 override fun barcodeResult(result: BarcodeResult?) {
+                    api.changeReader(result.toString(), App.user?.id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            Log.d("result",it.toString())
+                        },{
+                            Log.d("error",it.message)
+                        })
                     val intent = Intent(context,BookActivity::class.java)
                     intent.putExtra("isbn","984343434")
                     startActivity(intent)

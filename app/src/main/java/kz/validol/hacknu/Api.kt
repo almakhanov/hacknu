@@ -1,5 +1,6 @@
 package kz.validol.hacknu
 
+import com.google.gson.JsonObject
 import io.reactivex.Observable
 import kz.validol.hacknu.entities.*
 import retrofit2.http.Body
@@ -40,4 +41,8 @@ interface Api {
     @GET("book/change_reader/")
     fun requestOwner(@Query("consumer_id") user_id: Int?,
                      @Query("isbn") book_isbn: String?): Observable<GeneralRespose>
+
+    @GET("book/change_reader/")
+    fun changeReader(@Query("isbn") book_isbn: String?,
+                     @Query("consumer_id") user_id:Int?):Observable<JsonObject>
 }
