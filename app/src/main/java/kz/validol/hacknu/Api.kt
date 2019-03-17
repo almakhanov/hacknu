@@ -45,4 +45,7 @@ interface Api {
     @GET("book/change_reader/")
     fun changeReader(@Query("isbn") book_isbn: String?,
                      @Query("consumer_id") user_id:Int?):Observable<JsonObject>
+
+    @GET("community")
+    fun getCommunity():Observable<List<CommunityResponse>>
 }

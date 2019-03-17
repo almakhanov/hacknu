@@ -23,6 +23,7 @@
             android:layout_marginStart="16dp"
             android:textColor="#333b46"
             android:textStyle="bold"
+            android:maxLength="15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -38,12 +39,14 @@
 
     <TextView
             android:id="@+id/bookName"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintStart_toStartOf="@id/name"
             android:text="The Fellowship of the ring"
             android:textColor="#333b46"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textStyle="bold"
     />
 
@@ -71,6 +74,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
             android:id="@+id/like"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/avatar"
             android:src="@drawable/ic_favorite_border_black_24dp"
             android:layout_width="20dp"
@@ -78,6 +82,7 @@
 
     <ImageView
             android:id="@+id/comment"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/likeText"
             app:layout_constraintTop_toTopOf="@id/like"
             android:src="@drawable/ic_mode_comment_black_24dp"
@@ -86,6 +91,7 @@
             android:layout_height="20dp"/>
 
     <TextView
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/comment"
             app:layout_constraintTop_toTopOf="@id/likeText"
             android:text="4 comments"
@@ -96,6 +102,7 @@
 
     <TextView
             android:id="@+id/likeText"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="@id/like"
             app:layout_constraintStart_toEndOf="@id/like"
             app:layout_constraintBottom_toBottomOf="@id/like"
