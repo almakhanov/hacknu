@@ -74,7 +74,8 @@ class ScannerFragment : Fragment(), KoinComponent {
                         .subscribe({
                             Log.d("result",it.toString())
                             val intent = Intent(context, BookActivity::class.java)
-                            intent.putExtra(BOOK_ISNB,it.toString())
+                            val isbn = it.book.isbn
+                            intent.putExtra(BOOK_ISNB,isbn)
                             startActivity(intent)
                         },{
                             Log.d("error",it.message)

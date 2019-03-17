@@ -53,7 +53,7 @@ interface Api {
 
     @GET("book/change_reader/")
     fun changeReader(@Query("isbn") book_isbn: String?,
-                     @Query("consumer_id") user_id:Int?):Observable<JsonObject>
+                     @Query("consumer_id") user_id:Int?):Observable<ChangeBookResponse>
 
 
     @GET("related_books/")
