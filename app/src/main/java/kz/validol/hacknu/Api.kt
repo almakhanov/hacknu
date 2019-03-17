@@ -59,7 +59,7 @@ interface Api {
     @GET("related_books/")
     fun getReletedBooks(@Query("isbn") isbn: String): Observable<BooksListRespose>
 
-    @GET("community")
+    @GET("community/")
     fun getCommunity():Observable<List<CommunityResponse>>
 
     @GET("book/my")
@@ -68,4 +68,15 @@ interface Api {
     @GET("book/add_book")
     fun createBook(@Query("isbn") isbn:String?,
                    @Query("belong_id") id:Int?): Observable<CreateBookResponse>
+
+    @GET("message_get/")
+    fun getChatObjects(@Query("user_id") id: Int?): Observable<MessageResponse>
+
+    @GET("book/accept_change_reader/")
+    fun acceptRequest(@Query("consumer_id") id: Int?,
+                      @Query("isbn") isbn: String?): Observable<GeneralRespose>
+
+    @GET("book/decide_change_reader/")
+    fun declineRequest(@Query("consumer_id") id: Int?,
+                       @Query("isbn") isbn: String?): Observable<GeneralRespose>
 }
