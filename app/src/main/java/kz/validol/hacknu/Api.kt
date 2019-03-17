@@ -24,11 +24,20 @@ interface Api {
     @GET("books/")
     fun getBooks(): Observable<List<Book>>
 
+    @GET("book/free_book/")
+    fun getFreeBooks(): Observable<BooksListRespose>
+
     @GET("my_books/")
     fun getMyBooks(): Observable<List<Book>>
 
-    @GET("getGenreBooks/")
-    fun getGenreBooks(@Query("genre") genre: String): Observable<List<Book>>
+    @GET("recommend_me/")
+    fun getRecommendations(@Query("consumer_id") user_id: Int?): Observable<BooksListRespose>
+
+    @GET("book/search/")
+    fun getGenreBooks(@Query("genre") genre: String): Observable<BooksListRespose>
+
+    @GET("book/search/")
+    fun searchBooks(@Query("name") name: String): Observable<BooksListRespose>
 
     @GET("get_book_info/")
     fun getBookByISBN(@Query("isbn") isbn: String): Observable<BookResponse>
@@ -45,6 +54,10 @@ interface Api {
     @GET("book/change_reader/")
     fun changeReader(@Query("isbn") book_isbn: String?,
                      @Query("consumer_id") user_id:Int?):Observable<JsonObject>
+
+
+    @GET("related_books/")
+    fun getReletedBooks(@Query("isbn") isbn: String): Observable<BooksListRespose>
 
     @GET("community")
     fun getCommunity():Observable<List<CommunityResponse>>
