@@ -41,6 +41,14 @@ class AllBooksAdapter(
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         fun bind(item: Book?) {
 
+            if(item?.reader == null){
+                itemView.takenBtn.visibility = View.GONE
+                itemView.NOTtakenBtn.visibility = View.VISIBLE
+            }else{
+                itemView.takenBtn.visibility = View.VISIBLE
+                itemView.NOTtakenBtn.visibility = View.GONE
+            }
+
             Log.d("accepted", item?.author)
             Log.d("accepted", item?.photo)
 

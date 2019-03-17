@@ -5,7 +5,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +17,7 @@ import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
-import kz.validol.hacknu.Api
-import kz.validol.hacknu.MenuActivity
-import kz.validol.hacknu.R
-import kz.validol.hacknu.Singleton
+import kz.validol.hacknu.*
 import kz.validol.hacknu.book.BookActivity
 import kz.validol.hacknu.entities.Book
 import kz.validol.hacknu.genre_list.GenreListActivity
@@ -28,9 +28,10 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
 
     var genreList = ArrayList<GenreItem>()
     private val api: Api by inject()
-    var allBooksAdapter: AllBooksAdapter? = null
+    var freeBooksAdapter: AllBooksAdapter? = null
     var genresAdapter: GenresAdapter? = null
     var recommendedAdapter: AllBooksAdapter? = null
+    var allBooksAdapter: AllBooksAdapter? = null
 
 
     override fun onGenreItemClicked(item: GenreItem) {
@@ -66,25 +67,82 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getMetrics()
-        allBooksAdapter = AllBooksAdapter(activity as MenuActivity, this@HomeFragment)
+        freeBooksAdapter = AllBooksAdapter(activity as MenuActivity, this@HomeFragment)
         genresAdapter = GenresAdapter(genreList, this@HomeFragment)
         recommendedAdapter = AllBooksAdapter(activity as MenuActivity, this@HomeFragment)
+        allBooksAdapter = AllBooksAdapter(activity as MenuActivity, this@HomeFragment)
+
 
         getGenres()
         getRecommendations()
         getFreeBooks()
+        getAllBooks()
+
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            @SuppressLint("CheckResult")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s?.length!! > 0) {
+                    freeBooksBox.visibility = View.GONE
+                    recommendBox.visibility = View.GONE
+                    genreBox.visibility = View.GONE
+
+                    api.searchBooks(s.toString()).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            allBooksAdapter?.set(it.books as ArrayList<Book>)
+                            allBooksAdapter?.notifyDataSetChanged()
+                        }, {
+                            Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
+                        })
+
+                } else {
+                    freeBooksBox.visibility = View.VISIBLE
+                    recommendBox.visibility = View.VISIBLE
+                    genreBox.visibility = View.VISIBLE
+
+                    api.getBooks().subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            allBooksAdapter?.set(it as ArrayList<Book>)
+                            allBooksAdapter?.notifyDataSetChanged()
+                        }, {
+                            Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
+                        })
+                }
+            }
+
+        })
+    }
+
+    @SuppressLint("CheckResult")
+    private fun getAllBooks() {
+        allBooksRecycler.layoutManager = GridLayoutManager(activity, 2)
+        allBooksRecycler.adapter = allBooksAdapter
+        api.getBooks().subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                allBooksAdapter?.set(it as ArrayList<Book>)
+                allBooksAdapter?.notifyDataSetChanged()
+            }, {
+                Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
+            })
     }
 
     @SuppressLint("CheckResult")
     private fun getFreeBooks() {
         freeBooksRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        freeBooksRecycler.adapter = allBooksAdapter
-        api.getBooks().subscribeOn(Schedulers.io())
+        freeBooksRecycler.adapter = freeBooksAdapter
+        api.getFreeBooks().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Singleton.allBooks = it as ArrayList<Book>
-                allBooksAdapter?.set(Singleton.allBooks)
-                allBooksAdapter?.notifyDataSetChanged()
+                freeBooksAdapter?.set(it.books as ArrayList<Book>)
+                freeBooksAdapter?.notifyDataSetChanged()
             }, {
                 Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
             })
@@ -98,8 +156,8 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
 //            .observeOn(AndroidSchedulers.mainThread())
 //            .subscribe({
 //                Singleton.allBooks = it as ArrayList<Book>
-//                allBooksAdapter.set(Singleton.allBooks)
-//                allBooksAdapter.notifyDataSetChanged()
+//                freeBooksAdapter.set(Singleton.allBooks)
+//                freeBooksAdapter.notifyDataSetChanged()
 //            }, {
 //                Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
 //            })
@@ -109,10 +167,10 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
     private fun getRecommendations() {
         recommendRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recommendRecycler.adapter = recommendedAdapter
-        api.getBooks().subscribeOn(Schedulers.io())
+        api.getRecommendations(App.user?.id).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Singleton.recommendedBooks = it as ArrayList<Book>
+                Singleton.recommendedBooks = it.books as ArrayList<Book>
                 recommendedAdapter?.set(Singleton.recommendedBooks)
                 recommendedAdapter?.notifyDataSetChanged()
             }, {

@@ -14,10 +14,12 @@ data class Book(
     var comments: List<BookComment>? = null,
     var belong: User? = null,
     var reader: User? = null,
+    var reader_int: Int? = null,
     var history: List<User>? = null,
     var rating: Float? = null,
-    var requesters: List<User>? = null
+    var requesters: List<Int>? = null
 )
+
 
 //data class NewBook(
 //    val book: Book,

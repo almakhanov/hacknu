@@ -1,6 +1,7 @@
 package kz.validol.hacknu.book
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -11,7 +12,6 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.view.animation.OvershootInterpolator
-import android.widget.LinearLayout
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -24,11 +24,14 @@ import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
 import kz.validol.hacknu.entities.Book
 import kz.validol.hacknu.entities.BookComment
+import kz.validol.hacknu.entities.User
+import kz.validol.hacknu.home.AllBooksAdapter
 import org.koin.android.ext.android.inject
 import java.net.URL
 
 
-class BookActivity : AppCompatActivity(), ListCommentsAdapter.OnItemClickListener {
+class BookActivity : AppCompatActivity(), ListCommentsAdapter.OnItemClickListener,
+    ListReaderAdapter.OnItemClickListener, AllBooksAdapter.OnItemClickListener {
 
     companion object {
         var BOOK_ISNB = "BOOK_ISNB"
@@ -42,6 +45,8 @@ class BookActivity : AppCompatActivity(), ListCommentsAdapter.OnItemClickListene
 
     var text = ""
     var shortDesc = ""
+    var recommendedAdapter: AllBooksAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         this.getWindow()
@@ -84,7 +89,32 @@ class BookActivity : AppCompatActivity(), ListCommentsAdapter.OnItemClickListene
                     })
             }
         }
+
+        recommendedAdapter = AllBooksAdapter(this, this)
+        getRecommendations()
     }
+
+    @SuppressLint("CheckResult")
+    private fun getRecommendations() {
+        recommendRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recommendRecycler.adapter = recommendedAdapter
+        api.getReletedBooks(intent.getStringExtra(BOOK_ISNB)!!).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                recommendedAdapter?.set(it.books as ArrayList<Book>)
+                recommendedAdapter?.notifyDataSetChanged()
+            }, {
+                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+            })
+    }
+
+    override fun onBookItemClicked(item: Book) {
+        val intt = Intent(this, BookActivity::class.java)
+        intt.putExtra(BookActivity.BOOK_ISNB, item.isbn)
+        startActivity(intt)
+    }
+
+
 
     @SuppressLint("SetTextI18n")
     fun setData() {
@@ -180,10 +210,10 @@ class BookActivity : AppCompatActivity(), ListCommentsAdapter.OnItemClickListene
             NOTtakenBtn.visibility = View.GONE
             takenBtn.visibility = View.VISIBLE
 
-            if(book?.belong?.id == App.user?.id){
+            if(book?.reader?.id == App.user?.id){
                 takenBtn.text = "You are reading"
             }else{
-                val strs = book?.belong?.name?.split(' ')
+                val strs = book?.reader?.name?.split(' ')
                 takenBtn.text = "${strs!![0]} is reading"
 
                 takenBtn.setOnClickListener{
@@ -237,13 +267,34 @@ class BookActivity : AppCompatActivity(), ListCommentsAdapter.OnItemClickListene
 
         }
 
-
-        listUsers.adapter = ListReaderAdapter()
-        listUsers.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
-
         setComments(book?.comments as ArrayList<BookComment>)
-
+        setHistoryUsers(book?.history as ArrayList<User>)
     }
+
+    lateinit var historyAdapter: ListReaderAdapter
+    private fun setHistoryUsers(userList: ArrayList<User>){
+        if(userList.size == 0){
+            listUsers.visibility = View.GONE
+            readers.visibility = View.GONE
+        }else{
+            listUsers.visibility = View.VISIBLE
+            readers.visibility = View.VISIBLE
+        }
+
+        historyAdapter = ListReaderAdapter(this, this)
+        listUsers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        listUsers.adapter = historyAdapter
+        userList.let{list->
+            historyAdapter.set(list)
+            historyAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onUserReaderItemClicked(item: User) {
+    }
+
+
+
     lateinit var commentsAdapter: ListCommentsAdapter
     private fun setComments(comments: ArrayList<BookComment>?){
         commentsAdapter = ListCommentsAdapter(this, this)

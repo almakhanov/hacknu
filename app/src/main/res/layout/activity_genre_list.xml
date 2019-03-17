@@ -7,6 +7,36 @@
         android:layout_height="match_parent"
         tools:context=".genre_list.GenreListActivity">
 
+    <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
+                                                android:layout_height="match_parent">
+        <android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
 
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="18dp"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:text="Genre"
+                    android:id="@+id/titleGenre"
+                    android:textColor="#333b46"/>
+
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/listGenres"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/titleGenre"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.constraint.ConstraintLayout>

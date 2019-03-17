@@ -22,6 +22,12 @@
                 android:name=".book.BookActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <activity
+                android:name=".genre_list.GenreListActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <activity
                 android:name=".MenuActivity"
                 android:label="@string/title_activity_menu"
