@@ -12,8 +12,6 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlinx.android.synthetic.main.item_book.view.*
-import kz.validol.hacknu.Api
 import kz.validol.hacknu.App
 import kz.validol.hacknu.R
 import kz.validol.hacknu.auth.LoginActivity
@@ -70,9 +68,11 @@ class ProfileFragment : Fragment(),KoinComponent {
             startActivity(intent)
         }
         tabLayout.setupWithViewPager(viewPager)
-//        signout.setOnClickListener{
-//            logout()
-//        }
+
+
+        signout.setOnClickListener{
+            logout()
+        }
     }
 
     fun logout(){
