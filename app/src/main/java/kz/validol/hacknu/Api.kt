@@ -65,6 +65,9 @@ interface Api {
     @GET("book/my")
     fun getMyBook(@Query("belong_id") id: Int?): Observable<MyBooksResponse>
 
+    @GET("my_reading_books")
+    fun myReadingBooks(@Query("reader_id") id:Int?): Observable<MyReadingBook>
+
     @GET("book/add_book")
     fun createBook(@Query("isbn") isbn:String?,
                    @Query("belong_id") id:Int?): Observable<CreateBookResponse>
@@ -79,4 +82,6 @@ interface Api {
     @GET("book/decide_change_reader/")
     fun declineRequest(@Query("consumer_id") id: Int?,
                        @Query("isbn") isbn: String?): Observable<GeneralRespose>
+
+
 }
