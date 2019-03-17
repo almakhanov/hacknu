@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_chat.view.*
+import kz.validol.hacknu.App
 import kz.validol.hacknu.R
 import kz.validol.hacknu.entities.ChatObject
 import java.text.SimpleDateFormat
@@ -70,19 +71,25 @@ class ChatAdapter(
 
             when (item.status) {
                 0 -> {
-                    itemView.buttonLayout.visibility = View.VISIBLE
-                    itemView.acceptedText.visibility = View.GONE
-                    itemView.declinedText.visibility = View.GONE
+                    if(App.user?.id == item.author?.id){
+                        itemView.buttonLayout.visibility = View.GONE
+                        itemView.acceptedText.visibility = View.GONE
+                        itemView.declinedText.visibility = View.GONE
+                    }else{
+                        itemView.buttonLayout.visibility = View.VISIBLE
+                        itemView.acceptedText.visibility = View.GONE
+                        itemView.declinedText.visibility = View.GONE
 
-                    itemView.declineBtn.setOnClickListener {
-                        listener.onRequestDecline(item, adapterPosition)
-                        dataset[adapterPosition].status = 2
-                        notifyItemChanged(adapterPosition)
-                    }
-                    itemView.acceptBtn.setOnClickListener {
-                        listener.onRequsetAccept(item, adapterPosition)
-                        dataset[adapterPosition].status = 1
-                        notifyItemChanged(adapterPosition)
+                        itemView.declineBtn.setOnClickListener {
+                            listener.onRequestDecline(item, adapterPosition)
+                            dataset[adapterPosition].status = 2
+                            notifyItemChanged(adapterPosition)
+                        }
+                        itemView.acceptBtn.setOnClickListener {
+                            listener.onRequsetAccept(item, adapterPosition)
+                            dataset[adapterPosition].status = 1
+                            notifyItemChanged(adapterPosition)
+                        }
                     }
                 }
                 1 -> {

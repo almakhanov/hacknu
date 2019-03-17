@@ -36,10 +36,12 @@ class ChatFragment : Fragment(), ChatAdapter.OnItemClickListener {
         requestList.adapter = chatAdapter
         requestList.layoutManager = LinearLayoutManager(context!!)
 
-        api.getChatObjects(App.user?.id).subscribeOn(Schedulers.io())
+        api.getChatObjects(App.user?.id!!).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                chatAdapter?.set(it.chat as ArrayList<ChatObject>)
+                var list = it.chat as ArrayList<ChatObject>
+                list.reverse()
+                chatAdapter?.set(list)
                 chatAdapter?.notifyDataSetChanged()
             }, {
                 Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()

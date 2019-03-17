@@ -1,6 +1,5 @@
 package kz.validol.hacknu
 
-import com.google.gson.JsonObject
 import io.reactivex.Observable
 import kz.validol.hacknu.entities.*
 import retrofit2.http.Body
@@ -70,7 +69,7 @@ interface Api {
                    @Query("belong_id") id:Int?): Observable<CreateBookResponse>
 
     @GET("message_get/")
-    fun getChatObjects(@Query("user_id") id: Int?): Observable<MessageResponse>
+    fun getChatObjects(@Query("user_id") id: Int): Observable<MessageResponse>
 
     @GET("book/accept_change_reader/")
     fun acceptRequest(@Query("consumer_id") id: Int?,

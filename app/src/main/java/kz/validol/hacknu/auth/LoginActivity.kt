@@ -112,12 +112,10 @@ class LoginActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                if (it.code == 0) {
-                    App.user = it.user
-                    putLogined()
-                    startActivity(Intent(this, MenuActivity::class.java))
-                    finish()
-                }
+                App.user = it.user
+                putLogined()
+                startActivity(Intent(this, MenuActivity::class.java))
+                finish()
             }, {
                 Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
             })
