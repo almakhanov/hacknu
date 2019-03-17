@@ -63,11 +63,11 @@ class BookActivity : AppCompatActivity(), ListCommentsAdapter.OnItemClickListene
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    if (it.code == 0) {
+//                    if (it.code == 0) {
                         book = it.book
                         text = it.book?.description!!
                         setData()
-                    }
+//                    }
                 }, {
                     Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
                     it.printStackTrace()

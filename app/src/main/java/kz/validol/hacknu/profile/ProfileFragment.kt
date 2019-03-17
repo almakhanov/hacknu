@@ -9,7 +9,12 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.item_book.view.*
+import kz.validol.hacknu.Api
+import kz.validol.hacknu.App
 import kz.validol.hacknu.R
 import kz.validol.hacknu.auth.LoginActivity
 import org.koin.android.ext.android.inject
@@ -44,6 +49,21 @@ class ProfileFragment : Fragment(),KoinComponent {
             }
 
         })
+
+        val options = RequestOptions()
+            .centerCrop()
+            .placeholder(R.drawable.ic_color_lens_black_24dp)
+            .error(R.drawable.ic_color_lens_black_24dp)
+
+        Glide.with(context!!)
+            .load(App.user?.photo)
+            .apply(options)
+            .into(avatar)
+
+        avatarName.text = App.user?.name
+
+        position.text = App.user?.position
+
 
         fab.setOnClickListener {
             val intent = Intent(context,AddBookActivity::class.java)

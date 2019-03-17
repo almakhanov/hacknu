@@ -61,4 +61,11 @@ interface Api {
 
     @GET("community")
     fun getCommunity():Observable<List<CommunityResponse>>
+
+    @GET("book/my")
+    fun getMyBook(@Query("belong_id") id: Int?): Observable<MyBooksResponse>
+
+    @GET("book/add_book")
+    fun createBook(@Query("isbn") isbn:String?,
+                   @Query("belong_id") id:Int?): Observable<CreateBookResponse>
 }

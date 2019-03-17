@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 import kz.validol.hacknu.*
@@ -32,6 +33,7 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
     var genresAdapter: GenresAdapter? = null
     var recommendedAdapter: AllBooksAdapter? = null
     var allBooksAdapter: AllBooksAdapter? = null
+    var disposables = CompositeDisposable()
 
 
     override fun onGenreItemClicked(item: GenreItem) {
@@ -134,6 +136,11 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
             })
     }
 
+    override fun onStop() {
+        disposables.clear()
+        super.onStop()
+    }
+
     @SuppressLint("CheckResult")
     private fun getFreeBooks() {
         freeBooksRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -165,17 +172,24 @@ class HomeFragment : Fragment(), GenresAdapter.OnItemClickListener, AllBooksAdap
 
     @SuppressLint("CheckResult")
     private fun getRecommendations() {
+
         recommendRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recommendRecycler.adapter = recommendedAdapter
-        api.getRecommendations(App.user?.id).subscribeOn(Schedulers.io())
+        disposables.add(api.getRecommendations(App.user?.id).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                loading.visibility = View.VISIBLE
+            }
+            .doFinally {
+                loading.visibility = View.GONE
+            }
             .subscribe({
                 Singleton.recommendedBooks = it.books as ArrayList<Book>
                 recommendedAdapter?.set(Singleton.recommendedBooks)
                 recommendedAdapter?.notifyDataSetChanged()
             }, {
                 Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
-            })
+            }))
     }
 
 

@@ -11,6 +11,8 @@ import kotlinx.android.synthetic.main.activity_menu.*
 import kz.validol.hacknu.chat.ChatFragment
 import kz.validol.hacknu.community.CommunityFragment
 import kz.validol.hacknu.home.HomeFragment
+import kz.validol.hacknu.profile.FROM
+import kz.validol.hacknu.profile.MENU
 import kz.validol.hacknu.profile.ProfileFragment
 import kz.validol.hacknu.scanner.ScannerFragment
 
@@ -32,7 +34,11 @@ class MenuActivity : AppCompatActivity() {
             R.id.navigation_community -> selectedFragment = CommunityFragment()
             R.id.navigation_scanner -> {
                 if (ContextCompat.checkSelfPermission(applicationContext!!, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    val bunlde = Bundle()
                     selectedFragment = ScannerFragment()
+                    bunlde.putString(FROM, MENU)
+                    selectedFragment.arguments = bunlde
+
                 }
                 else {
                     requestPermissions(arrayOf(android.Manifest.permission.CAMERA), CAMERA_CODE)

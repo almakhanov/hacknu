@@ -1,6 +1,7 @@
 package kz.validol.hacknu.profile.my_books
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -12,10 +13,8 @@ import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_my_books.*
-import kz.validol.hacknu.Api
-import kz.validol.hacknu.MenuActivity
-import kz.validol.hacknu.R
-import kz.validol.hacknu.Singleton
+import kz.validol.hacknu.*
+import kz.validol.hacknu.book.BookActivity
 import kz.validol.hacknu.community.NewsListAdapter
 import kz.validol.hacknu.entities.Book
 import kz.validol.hacknu.home.AllBooksAdapter
@@ -25,7 +24,9 @@ import org.koin.standalone.KoinComponent
 class MyBooksFragment: Fragment(),KoinComponent, AllBooksAdapter.OnItemClickListener {
 
     override fun onBookItemClicked(item: Book) {
-
+        val intt = Intent(activity, BookActivity::class.java)
+        intt.putExtra(BookActivity.BOOK_ISNB, item.isbn)
+        startActivity(intt)
     }
 
     var allBooksAdapter: AllBooksAdapter? = null
@@ -36,9 +37,13 @@ class MyBooksFragment: Fragment(),KoinComponent, AllBooksAdapter.OnItemClickList
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onResume() {
         allBooksAdapter = AllBooksAdapter(activity as MenuActivity, this@MyBooksFragment)
         getFreeBooks()
-        super.onViewCreated(view, savedInstanceState)
+        super.onResume()
     }
 
     @SuppressLint("CheckResult")
@@ -47,10 +52,10 @@ class MyBooksFragment: Fragment(),KoinComponent, AllBooksAdapter.OnItemClickList
 //        bookList.adapter = NewsListAdapter()
         bookList.layoutManager = GridLayoutManager(activity!!, 2)
         bookList.adapter = allBooksAdapter
-        api.getBooks().subscribeOn(Schedulers.io())
+        api.getMyBook(App.user?.id).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Singleton.allBooks = it as ArrayList<Book>
+                Singleton.allBooks = it.book as ArrayList<Book>
                 allBooksAdapter?.set(Singleton.allBooks)
                 allBooksAdapter?.notifyDataSetChanged()
             }, {

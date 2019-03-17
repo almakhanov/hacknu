@@ -135,6 +135,18 @@
 
             </android.support.v7.widget.RecyclerView>
 
+            <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/loading"
+                    app:layout_constraintStart_toStartOf="@id/recommendRecycler"
+                    app:layout_constraintEnd_toEndOf="@id/recommendRecycler"
+                    app:layout_constraintTop_toTopOf="@id/recommendRecycler"
+                    app:layout_constraintBottom_toBottomOf="@id/recommendRecycler"
+                    app:lottie_rawRes="@raw/loading"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"/>
+
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout

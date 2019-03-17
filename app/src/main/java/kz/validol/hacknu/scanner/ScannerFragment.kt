@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -20,6 +21,8 @@ import kz.validol.hacknu.App
 import kz.validol.hacknu.R
 import kz.validol.hacknu.book.BookActivity
 import kz.validol.hacknu.book.BookActivity.Companion.BOOK_ISNB
+import kz.validol.hacknu.profile.FROM
+import kz.validol.hacknu.profile.PROFILE
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 
@@ -28,6 +31,8 @@ class ScannerFragment : Fragment(), KoinComponent {
     private lateinit var qrCodeView: DecoratedBarcodeView
     private val api: Api by inject()
 
+
+    private var mode:String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +43,7 @@ class ScannerFragment : Fragment(), KoinComponent {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mode = arguments?.getString(FROM)
         bindView(view)
 //        val builder = AlertDialog.Builder(context)
 //        val view = LayoutInflater.from(context).inflate(R.layout.qr_code_response,null)
@@ -65,21 +71,36 @@ class ScannerFragment : Fragment(), KoinComponent {
         qrCodeView = findViewById(R.id.zxing_barcode_scanner)
         qrCodeView.apply {
             resume()
-            decodeContinuous(object: BarcodeCallback {
+            decodeSingle(object: BarcodeCallback {
                 @SuppressLint("CheckResult")
                 override fun barcodeResult(result: BarcodeResult?) {
-                    api.changeReader(result.toString(), App.user?.id)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            Log.d("result",it.toString())
-                            val intent = Intent(context, BookActivity::class.java)
-                            val isbn = it.book.isbn
-                            intent.putExtra(BOOK_ISNB,isbn)
-                            startActivity(intent)
-                        },{
-                            Log.d("error",it.message)
-                        })
+                    if (mode.equals(PROFILE)){
+                        api.createBook(result.toString(),App.user?.id)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                val intent = Intent(context, BookActivity::class.java)
+                                val isbn = it.book.isbn
+                                intent.putExtra(BOOK_ISNB,isbn)
+                                startActivity(intent)
+                                activity?.finish()
+                            },{
+
+                            })
+                    }else{
+                        api.changeReader(result.toString(), App.user?.id)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                Log.d("result",it.toString())
+                                val intent = Intent(context, BookActivity::class.java)
+                                val isbn = it.book.isbn
+                                intent.putExtra(BOOK_ISNB,isbn)
+                                startActivity(intent)
+                            },{
+                                Log.d("error",it.message)
+                            })
+                    }
 
                 }
 
