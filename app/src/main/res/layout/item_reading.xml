@@ -21,7 +21,7 @@
             app:layout_constraintStart_toEndOf="@id/bookImg"
             app:layout_constraintTop_toTopOf="@id/bookImg"
             android:layout_marginStart="16dp"
-            android:text="Harry Potter and Broya Potter deppa"
+            android:text="Harry Potter and Cursed Child"
             android:textColor="#000"
             android:textSize="18sp"
             android:textStyle="bold"

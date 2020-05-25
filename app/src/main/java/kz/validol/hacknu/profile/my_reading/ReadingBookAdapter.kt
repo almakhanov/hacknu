@@ -11,7 +11,7 @@ class ReadingBookAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
         return ReadingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_reading,parent,false))
     }
 
-    override fun getItemCount(): Int = 5
+    override fun getItemCount(): Int = 1
 
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
 

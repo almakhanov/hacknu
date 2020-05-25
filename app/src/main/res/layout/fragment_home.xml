@@ -190,7 +190,7 @@
                     android:id="@+id/labelAllBooks"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    android:text="All books in EPAM"
+                    android:text="All books in Library"
                     android:layout_marginStart="16dp"
                     android:textSize="24sp"
                     android:textColor="#5c616d"
